@@ -19,6 +19,7 @@ namespace EntityFrameworkSeedFromJSON
         {
             GetSpeakers(context);
             context.SaveChanges();
+            GetSessions(context);
         }
 
         private void GetSpeakers(DbLocalContext context)
@@ -43,7 +44,41 @@ namespace EntityFrameworkSeedFromJSON
             }
         }
 
-       
+        private void GetSessions(DbLocalContext context)
+        {
+            var sessionJsonAll = GetEmbeddedResourceAsString("EntityFrameworkSeedFromJSON.session.json");
+
+            JArray jsonValSessions = JArray.Parse(sessionJsonAll) as JArray;
+            dynamic sessionsData = jsonValSessions;
+            foreach (dynamic session in sessionsData)
+            {
+                var sessionForAdd = new Session
+                {
+                    Id = session.id,
+                    Description = session.description,
+                    DescriptionShort = session.descriptionShort,
+                    Title = session.title
+                };
+
+                var speakerPictureIds = new List<int>();
+                foreach (dynamic speaker in session.speakers)
+                {
+                    dynamic pictureId = speaker.id;
+                    speakerPictureIds.Add((int)pictureId);
+                }
+
+                context.Sessions.Add(sessionForAdd);
+
+                sessionForAdd.Speakers = new List<Speaker>();
+                foreach (var speakerPictureId in speakerPictureIds)
+                {
+                    var speakerForAdd = context.Speakers.FirstOrDefault(a => a.PictureId == speakerPictureId);
+                    sessionForAdd.Speakers.Add(speakerForAdd);
+                }
+            }
+        }
+
+
         private string GetEmbeddedResourceAsString(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();

@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 
+
 namespace EntityFrameworkSeedFromJSON
 {
     [DbConfigurationType(typeof(DataConfiguration))]
@@ -7,8 +8,9 @@ namespace EntityFrameworkSeedFromJSON
     {
        
         public DbSet<Speaker> Speakers { get; set; }
+        public DbSet<Session> Sessions { get; set; }
 
-      
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -18,7 +20,5 @@ namespace EntityFrameworkSeedFromJSON
 
     }
 
-
-
-
+   
 }
