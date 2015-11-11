@@ -67,14 +67,14 @@ namespace EntityFrameworkSeedFromJSON
                     speakerPictureIds.Add((int)pictureId);
                 }
 
-                context.Sessions.Add(sessionForAdd);
-
                 sessionForAdd.Speakers = new List<Speaker>();
                 foreach (var speakerPictureId in speakerPictureIds)
                 {
                     var speakerForAdd = context.Speakers.FirstOrDefault(a => a.PictureId == speakerPictureId);
                     sessionForAdd.Speakers.Add(speakerForAdd);
                 }
+
+                context.Sessions.Add(sessionForAdd);
             }
         }
 
